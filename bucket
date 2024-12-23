@@ -1,0 +1,29 @@
+#include<stdio.h>
+
+void main() {
+    int incomingPacketSize, outgoingRate, bucketSize, numberOfInputs, currentBuffer = 0;
+
+    printf("Enter bucket size, outgoing rate, and number of inputs: ");
+    scanf("%d %d %d", &bucketSize, &outgoingRate, &numberOfInputs);
+
+    while (numberOfInputs != 0) {
+        printf("\nEnter incoming packet size: ");
+        scanf("%d", &incomingPacketSize);
+
+        if (incomingPacketSize <= (bucketSize - currentBuffer)) {
+            currentBuffer += incomingPacketSize;
+            printf("Bucket buffer size: %d out of %d\n", currentBuffer, bucketSize);
+        } else {
+            printf("Dropped %d packets\n", currentBuffer + incomingPacketSize - bucketSize);
+            printf("Bucket buffer size: %d out of %d\n", currentBuffer, bucketSize);
+            currentBuffer = bucketSize; // Buffer is full
+        }
+
+        // Simulate outgoing packets
+        currentBuffer -= outgoingRate;
+        if (currentBuffer < 0) currentBuffer = 0;
+
+        printf("After outgoing: %d packets left out of %d in buffer\n", currentBuffer, bucketSize);
+        numberOfInputs--;
+    }
+}
